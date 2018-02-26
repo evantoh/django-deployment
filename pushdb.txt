@@ -1,0 +1,5 @@
+# heroku psql
+# heroku pg:reset
+# heroku pg:push <name of local db> <name of heroku db>
+
+#psql

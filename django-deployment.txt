@@ -1,0 +1,177 @@
+REFACTOR AND DEPLOY
+
+Root directory​ name : ​ rootDir(your project root)
+Django-project​ name : ​ myproject(name of your project)
+Django-app​ name : ​ myapp(your app name)
+
+#follow each step careful
+1.Move ​ media folder​ and ​ static folder​ to the ​ root directory
+2.Move ​ app folder​ to ​ root directory
+3.Move ​ manage.py​ and ​ db.sqlite3 ​ to ​ root directory
+4.Move the following files from the ​ project subfolder​ to the ​ project
+    folder
+
+○ Before
+■ project_folder(myproject) ​ /
+■ project_sub_folder(myproject) ​ /
+■ __init__.py
+■ settings.py
+■ urls.py
+■ wsgi.py
+
+○ After
+■ project_folder(myproject)
+■ __init__.py
+■ settings.py
+■ urls.py■ wsgi.py
+○ delete project_sub_folder(​ myproject ​ )
+○ Current application structure
+■ folder_name(rootDir)/
+■ .gitignore
+■ LICENSE
+■ README.md
+■ requirements.txt
+■ manage.py
+■ db.sqlite3
+■ project_name(myproject)/
+■ __init__.py
+■ settings.py
+■ urls.py
+■ wsgi.py
+■ app_name(myapp)/
+■ __init__.py
+■ admin.py
+■ apps.py
+■ migrations/
+■ models.py
+■ templates/
+■ tests.py
+■ urls.py
+■ views.py
+■ virtual/
+■ media/
+■ static/
+5. pip install dj-database-url gunicorn psycopg2 whitenoise
+python-decouple
+6. pip freeze > requirements.txt
+7. Create runtime.txt
+○ touch runtime.txt■ python-3.6.2​ (add inside the file)
+8. Create Procfile
+○ touch Procfile
+■ web: gunicorn​ ​ project_name(myproject) ​ .wsgi​ (add inside
+the file)
+9. Current application structure
+○ folder_name(rootDir)/
+■ .gitignore
+■ LICENSE
+■ README.md
+■ requirements.txt
+■ manage.py
+■ db.sqlite3
+■ project_name(myproject)/
+■ __init__.py
+■ settings.py
+■ urls.py
+■ wsgi.py
+■ app_name(myapp)/
+■ __init__.py
+■ admin.py
+■ apps.py
+■ migrations/
+■ models.py
+■ templates/
+■ tests.py
+■ urls.py
+■ views.py
+■ virtual/
+■ media/
+■ static/
+■ Procfile
+■ runtime.txt10. Add the following content to ​ project_name/settings.py
+(​ myproject/settings.py)
+○ import dj_database_url
+○ db_from_env = dj_database_url.config(conn_max_age=500)
+○ DATABASES['default'].update(db_from_env)
+11. Add the following content to ​ project_name/wsgi.py
+(​ myproject/wsgi.py)
+○ from whitenoise.django import DjangoWhiteNoise
+○ application = DjangoWhiteNoise(application)
+12. Add the following content to ​ project_name/settings.py
+(​ myproject/settings.py)
+○ STATIC_URL = '/static/'
+○ STATICFILES_DIRS = [
+○
+os.path.join(BASE_DIR, "static"),
+○ ]
+○ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+○ STATICFILES_STORAGE =
+'whitenoise.django.GzipManifestStaticFilesStorage'
+13. python3.6 manage.py runserver
+○ confirm everything is still working ​ especially CSS
+14. Create ​ .env
+○ touch .env
+■ SECRET_KEY=<SECRET_KEY>
+■ DEBUG=True
+15. Add ​ .env​ to ​ .gitignore
+16. Add the following content to ​ project_name/settings.py
+(​ myproject/settings.py)
+○ from decouple import config
+17. Replace the existing content for the following values in
+project_name/settings.py ​ ​ ( m
+yproject/settings.py) ​ with this:
+○ # SECURITY WARNING: keep the secret key used in
+production secret!
+○ SECRET_KEY = config('SECRET_KEY')○
+○
+○ # SECURITY WARNING: don't run with debug turned on in
+production!
+○ DEBUG = config('DEBUG', default=False, cast=bool)
+○ python3.6 manage.py runserver
+■ check if everything is still working
+18. git status
+19. git add
+20. git commit
+21. git branch
+○ ensure ​ git branch​ is ​ master
+22. heroku login
+23. heroku create <APP_NAME>
+24.
+○ go to the app created
+○ go to ​ settings
+○ click ​ reveal config variables
+○ add ​ SECRET_KEY​ and ​ DEBUG​ from the ​ .env​ file
+25. heroku config
+○ ensure configurations have been set
+26. heroku addons:create heroku-postgresql:hobby-dev
+27. Replace the existing content for the following values in
+project_name/settings.py ​ ​ ( m
+yproject/settings.py) ​ with this:○ ALLOWED_HOSTS = [‘​ * ​ ‘]
+28. git status
+29. git add
+30. git commit
+31. git push heroku master
+○ check if it has worked
+○ expect a ​ ProgrammingError page ​ when you open the site.
+Since the project was set up to get images from the database. A
+database that doesn’t have the tables you created
+32. heroku run python3.6 manage.py check
+33. heroku run python3.6 manage.py makemigrations
+app_name(myapp)
+34. heroku run python3.6 manage.py migrate
+35. heroku run python3.6 manage.py createsuperuser
+○ login in to the admin route
+○ upload images
+Hopefully it worked
+Side Note
+-It is best to set ​ DEBUG​ ​ to False
+-you can just set to ​ DEBUG​ to ​ False​ while you are on this page-
+1.
+2.
+3.
+4.
+5.
+heroku login
+heroku config
+git add
+git commit
+git push heroku master
