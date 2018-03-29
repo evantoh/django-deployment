@@ -3,3 +3,6 @@
 # heroku pg:push <name of local db> <name of heroku db>
 
 #psql
+
+#command for running all requirements
+#pip install -r requirements.txt
